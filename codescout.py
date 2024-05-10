@@ -139,7 +139,9 @@ interligne = max(1, args.interligne)
 bordure = max(0,args.bordure)
 
 # Validation du nom du code
-if code not in ('SOLEIL','MUSICAL'):
+codes = ('SOLEIL','MUSICAL')
+if code not in codes:
+    print(f'Codes reconnus: {codes}')
     raise ValueError(f"code {code} inconnu")
 
 # On sépare le message sur plusieurs lignes en utilisant le séparateur
