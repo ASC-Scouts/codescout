@@ -26,7 +26,7 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-from PIL import Image, ImageDraw
+from PIL import Image, ImageDraw, ImageFont
 import math
 import argparse
 import re
@@ -75,7 +75,7 @@ def creer_un_soleil(dessin,
         # On dessine le trait
         dessin.line((x1, y1, x2, y2), fill="black", width=1)
 
-def dessine_une_note(lettre,position,portee,rayon,bordure):
+def dessine_une_note(dessin,lettre,position,portee,rayon,bordure):
    # On met la lettre en majuscule
    lettre = lettre.upper()
 
@@ -105,111 +105,157 @@ def dessine_une_note(lettre,position,portee,rayon,bordure):
    else:
        dessin.line((x-rayon,y,x-rayon,y+4*rayon))
 
-print("\n====================================================")
-print("Encodage d'un message à l'aide d'un code scout")
-print("Auteur: Goéland Astucieux (vincent.fortin@gmail.com)")
-print("Version du 10 mai 2024")
-print("====================================================\n")
+# Fonction principale qui construit le code scout et retourne une image
+def codescout(message,
+              code,
+              delimiteur = ':',
+              taille = 8,
+              interligne = 1,
+              bordure = 0,
+              legende = '',
+              nom_fonte = 'FreeMono.ttf',
+              decoder = False):
 
-# Arguments du script
-parser = argparse.ArgumentParser(description='Encodeur en code scout')
-parser.add_argument('--message', '-m', type=str, required=True,
-                    help='Message à encoder')
-parser.add_argument('--code', '-c', type=str, required=True,
-                    help='Nom du code à utiliser (soleil ou musical)')
-parser.add_argument('--sortie', '-s', type=str, required=False, default="",
-                    help='Nom du fichier qui contiendra le message codé')
-parser.add_argument('--delimiteur', '-d', type=str, required=False, default=':',
-                    help='Délimiteur utilisé pour diviser le message sur plusieurs lignes')
-parser.add_argument('--taille', '-t', type=int, required=False, default=8,
-                    help="Taille des éléments (en pixels)")
-parser.add_argument('--interligne', '-i', type=int, required=False, default=1,
-                    help="Permet d'ajouter de l'espace vide entre chaque ligne de code pour decoder")
-parser.add_argument('--bordure', '-b', type=int, required=False, default=0,
-                    help='Nombre de pixels du cadre (pas de cadre si egal a zero)')
+    # Validation du nom du code
+    codes = ('SOLEIL','MUSICAL')
+    if code not in codes:
+        print(f'Codes reconnus: {codes}')
+        raise ValueError(f"code {code} inconnu")
 
-# Traitement des arguments sur la ligne de commande
-args = parser.parse_args()
-message = args.message
-code = args.code.upper()
-sortie = args.sortie
-delimiteur = args.delimiteur
-taille = max(1,args.taille)
-interligne = max(1, args.interligne)
-bordure = max(0,args.bordure)
+    # On ajuste l'interligne a 2 au minimum si on doit ajouter le message decode
+    if decoder:
+        interligne = max(2, args.interligne)
 
-# Validation du nom du code
-codes = ('SOLEIL','MUSICAL')
-if code not in codes:
-    print(f'Codes reconnus: {codes}')
-    raise ValueError(f"code {code} inconnu")
+    # On sépare le message sur plusieurs lignes en utilisant le séparateur
+    message_split = message.split(delimiteur)
 
-# On sépare le message sur plusieurs lignes en utilisant le séparateur
-message_split = message.split(delimiteur)
+    # Taille du message en nombre de caractères (considérant la ligne la plus longue)
+    taille_message_x = len(max(message_split, key=len))
+    taille_message_y = len(message_split)
 
-# Taille du message en nombre de caractères (considérant la ligne la plus longue)
-taille_message_x = len(max(message_split, key=len))
-taille_message_y = len(message_split)
+    if code == 'SOLEIL':
+        # Longueur des rayons pour les voyelles: 2 fois le rayon du soleil
+        longueur_trait_voyelle = taille * 2
+        # Longueur des rayons pour les consonnes: meme que le rayon du soleil
+        longueur_trait_consonne = taille
+        # Taille totale d'un soleil en pixel en incluant les rayons et de l'espace autour
+        taille_soleil = taille + 2 * max(longueur_trait_consonne, longueur_trait_voyelle) + taille // 2
+        taille_image = [taille_message_x * taille_soleil, taille_message_y * taille_soleil * interligne]
+    elif code == 'MUSICAL':
+        # Taille de l'image en pixel
+        taille_portee = taille * 16 + taille * 4 * (interligne - 1)
+        taille_image = [(taille_message_x+1)*taille*3, taille_message_y*taille_portee]
 
-if code == 'SOLEIL':
-    # Longueur des rayons pour les voyelles: 2 fois le rayon du soleil
-    longueur_trait_voyelle = taille * 2
-    # Longueur des rayons pour les consonnes: meme que le rayon du soleil
-    longueur_trait_consonne = taille
-    # Taille totale d'un soleil en pixel en incluant les rayons et de l'espace autour
-    taille_soleil = taille + 2 * max(longueur_trait_consonne, longueur_trait_voyelle) + taille // 2
-    taille_image = [taille_message_x * taille_soleil, taille_message_y * taille_soleil * interligne]
-elif code == 'MUSICAL':
-    # Taille de l'image en pixel
-    taille_portee = taille * interligne * 16
-    taille_image = [(taille_message_x+1)*taille*3, taille_message_y*taille_portee]
+    # Ajout d'espace pour le cadre et la légende
+    for i in range(2):
+        taille_image[i] = taille_image[i] + bordure * 2
+    if legende != '':
+        taille_image[1] = taille_image[1] + taille * 4
 
-# Ajout d'un cadre
-for i in range(2):
-    taille_image[i] = taille_image[i] + bordure * 2
+    # Création d'une image avec la bonne taille
+    image = Image.new("1", taille_image, "white")
 
-# Création d'une image avec la bonne taille
-image = Image.new("1", taille_image, "white")
+    # Creation de l'object permettant de dessiner l'image
+    dessin = ImageDraw.Draw(image)
 
-# Creation de l'object permettant de dessiner l'image
-dessin = ImageDraw.Draw(image)
+    # Ajout d'un cadre
+    for i in range(0,bordure):
+        dessin.rectangle([i,i,taille_image[0]-i,taille_image[1]-i])
 
-# Ajout d'un cadre
-for i in range(0,bordure):
-    dessin.rectangle([i,i,taille_image[0]-i,taille_image[1]-i])
+    # Ajout d'une legende en bas a droite
+    fonte = ImageFont.truetype(nom_fonte, taille*4)
+    if legende != '':
+        dessin.text([bordure+taille*2,taille_image[1]-taille*6-1], legende, font=fonte)
     
-if code == 'MUSICAL':
-    # On dessine les portées
+    if code == 'MUSICAL':
+        # On dessine les portées
+        for i in range(taille_message_y):
+            for j in range(4*taille,14*taille,2*taille):
+                pos_y = j + i * taille_portee + bordure
+                dessin.line([(bordure,pos_y),(taille_image[0]-bordure,pos_y)])
+
+    # On encode le message ligne par ligne
     for i in range(taille_message_y):
-        for j in range(4*taille,14*taille,2*taille):
-            pos_y = j + i * taille_portee + bordure
-            dessin.line([(bordure,pos_y),(taille_image[0]-bordure,pos_y)])
+        # Encodage de chaque lettre d'une ligne
+        for j in range(len(message_split[i])):
+            if code == 'SOLEIL':
+                creer_un_soleil(dessin, 
+                    message_split[i][j], 
+                    ((j+0.5)*taille_soleil+bordure, (i*interligne+0.5)*taille_soleil+bordure),
+                    taille,
+                    longueur_trait_voyelle,
+                    longueur_trait_consonne)
+                if decoder:
+                    dessin.text(((j+0.3)*taille_soleil+bordure, (i*interligne+1)*taille_soleil+bordure),
+                                message_split[i][j], font=fonte)
+            elif code == 'MUSICAL':
+                # On calcule la position de la note sur la portée
+                x = 3*taille*(j+0.75) + bordure
+                dessine_une_note(dessin, message_split[i][j], j+1, i*taille_portee, taille, bordure)
+                if decoder:
+                    dessin.text((x,(i+0.75)*taille_portee),
+                                 message_split[i][j], font=fonte, align='center')
 
-# On encode le message ligne par ligne
-print("Message à encoder:")
-for i in range(taille_message_y):
-    print(message_split[i])
-    # Encodage de chaque lettre d'une ligne
-    for j in range(len(message_split[i])):
-        if code == 'SOLEIL':
-            creer_un_soleil(dessin, 
-                message_split[i][j], 
-                ((j+0.5)*taille_soleil+bordure, (i*interligne+0.5)*taille_soleil+bordure),
-                taille,
-                longueur_trait_voyelle,
-                longueur_trait_consonne)
-        elif code == 'MUSICAL':
-            dessine_une_note(message_split[i][j],j+1,i*taille_portee,taille,bordure)
+    return image
 
-# Si l'usager n'a pas fourni de nom de fichier on en construit un a partir du message
-if sortie == "":
-    # Pas de nom de fichier fourni, on utilise le message pour en construire un
-    sortie = message.replace(" ", "_")
-    sortie = re.sub(r'[^a-zA-Z]', '', sortie)
-    sortie = sortie + '.png'
+if __name__ == '__main__':
 
-# On sauvegarde le résultat
-image.save(sortie)
+    print("\n====================================================")
+    print("Encodage d'un message à l'aide d'un code scout")
+    print("Auteur: Goéland Astucieux (vincent.fortin@gmail.com)")
+    print("Version du 12 mai 2024")
+    print("====================================================\n")
 
-print("\nNom du fichier contenant l'image produite:")
-print(sortie)
+    # Arguments du script
+    parser = argparse.ArgumentParser(description='Encodeur en code scout')
+    parser.add_argument('--message', '-m', type=str, required=True,
+                        help='Message à encoder')
+    parser.add_argument('--code', '-c', type=str, required=True,
+                        help='Nom du code à utiliser (soleil ou musical)')
+    parser.add_argument('--sortie', '-s', type=str, required=False, default="",
+                        help='Nom du fichier qui contiendra le message codé')
+    parser.add_argument('--delimiteur', '-d', type=str, required=False, default=':',
+                        help='Délimiteur utilisé pour diviser le message sur plusieurs lignes')
+    parser.add_argument('--taille', '-t', type=int, required=False, default=8,
+                        help="Taille des éléments (en pixels)")
+    parser.add_argument('--interligne', '-i', type=int, required=False, default=1,
+                        help="Permet d'ajouter de l'espace vide entre chaque ligne de code pour decoder")
+    parser.add_argument('--bordure', '-b', type=int, required=False, default=0,
+                        help='Nombre de pixels du cadre (pas de cadre si egal a zero)')
+    parser.add_argument('--legende', '-l', type=str, required=False, default="",
+                        help="Légende ajoutée en bas à gauche de l'image")
+    parser.add_argument('--fonte', '-f', type=str, required=False, default='FreeMono.ttf',
+                        help="Fonte à utiliser pour la légende")
+    parser.add_argument('--decoder', action='store_true', required=False, default=False,
+                        help="Indique s'il faut afficher le messgae décodé")
+    args = parser.parse_args()
+
+    message = args.message
+    sortie = args.sortie
+    code = args.code.upper()
+    delimiteur = args.delimiteur
+    taille = max(1,args.taille)
+    interligne = max(1, args.interligne)
+    bordure = max(0, args.bordure)
+    legende = args.legende
+    nom_fonte = args.fonte
+    decoder = args.decoder
+
+    print("Message à encoder:")
+    print(args.message)
+
+    # Appel de la fonction principale en utilisant les arguments de la ligne de commande
+    image = codescout(message, code, delimiteur, taille, interligne, bordure, legende, nom_fonte, decoder)
+
+    # Si l'usager n'a pas fourni de nom de fichier on en construit un a partir du message
+    if sortie == "":
+        # Pas de nom de fichier fourni, on utilise le message pour en construire un
+        sortie = message.replace(" ", "_")
+        sortie = re.sub(r'[^a-zA-Z]', '', sortie)
+        sortie = sortie + '.png'
+
+    # On sauvegarde le résultat
+    image.save(sortie)
+
+    print("\nNom du fichier contenant l'image produite:")
+    print(sortie)

@@ -19,6 +19,36 @@ code=$1
 ./codescout.py -m "Le scout:protege la vie" -c $code -i 2 -b 3
 ./codescout.py -m "Le scout:fait equipe" -c $code -i 2 -b 3
 ./codescout.py -m "Le socut fait:tout de son mieux" -c $code -i 2 -b 3
+./codescout.py -m "Le scout fait:tout de son mieux" -c $code -i 2 -b 3
 ./codescout.py -m "Le scout:repand la joie" -c $code -i 2 -b 3
 ./codescout.py -m "Le scout respecte:le travail" -c $code -i 2 -b 3
 ./codescout.py -m "Le scout est:maitre de lui meme" -c $code -i 2 -b 3
+
+./codescout.py -m "Rester:immobile:ne sert:a rien" -c $code -i 1 -s "BP1.png" -t 30 --decoder
+./codescout.py -m "Il faut:choisir entre:progresser:ou regresser" -c $code -i 1 -s "BP2.png" -t 30 --decoder
+./codescout.py -m "Allons donc:de l'avant:et le sourire:aux levres" -c $code -i 1 -s "BP3.png" -t 30 --decoder
+./codescout.py -m "Baden:Powell:Fondateur:du Scoutisme" -c $code -i 1 -s "BP4.png" -t 30 --decoder
+
+./codescout.py -m "Rester" -c $code -i 1 -s "BP1a.png" -t 30 --decoder --fonte /usr/share/fonts/dejavu/DejaVuSans-Bold.ttf
+./codescout.py -m "immobile" -c $code -i 1 -s "BP1b.png" -t 30 --decoder --fonte /usr/share/fonts/dejavu/DejaVuSans-Bold.ttf
+./codescout.py -m "ne sert" -c $code -i 1 -s "BP1c.png" -t 30 --decoder --fonte /usr/share/fonts/dejavu/DejaVuSans-Bold.ttf
+./codescout.py -m "a rien" -c $code -i 1 -s "BP1d.png" -t 30 --decoder --fonte /usr/share/fonts/dejavu/DejaVuSans-Bold.ttf
+
+./codescout.py -m "Il faut" -c $code -i 1 -s "BP2a.png" -t 30 --decoder --fonte /usr/share/fonts/dejavu/DejaVuSans-Bold.ttf
+./codescout.py -m "choisir" -c $code -i 1 -s "BP2b.png" -t 30 --decoder --fonte /usr/share/fonts/dejavu/DejaVuSans-Bold.ttf
+./codescout.py -m "entre" -c $code -i 1 -s "BP2c.png" -t 30 --decoder --fonte /usr/share/fonts/dejavu/DejaVuSans-Bold.ttf
+./codescout.py -m "progresser" -c $code -i 1 -s "BP2d.png" -t 30 --decoder --fonte /usr/share/fonts/dejavu/DejaVuSans-Bold.ttf
+./codescout.py -m "ou" -c $code -i 1 -s "BP2e.png" -t 30 --decoder --fonte /usr/share/fonts/dejavu/DejaVuSans-Bold.ttf
+./codescout.py -m "regresser" -c $code -i 1 -s "BP2f.png" -t 30 --decoder --fonte /usr/share/fonts/dejavu/DejaVuSans-Bold.ttf
+
+./codescout.py -m "Allons" -c $code -i 1 -s "BP3a.png" -t 30 --decoder --fonte /usr/share/fonts/dejavu/DejaVuSans-Bold.ttf
+./codescout.py -m "donc" -c $code -i 1 -s "BP3b.png" -t 30 --decoder --fonte /usr/share/fonts/dejavu/DejaVuSans-Bold.ttf
+./codescout.py -m "de l'avant" -c $code -i 1 -s "BP3c.png" -t 30 --decoder --fonte /usr/share/fonts/dejavu/DejaVuSans-Bold.ttf
+./codescout.py -m "et le" -c $code -i 1 -s "BP3d.png" -t 30 --decoder --fonte /usr/share/fonts/dejavu/DejaVuSans-Bold.ttf
+./codescout.py -m "sourire" -c $code -i 1 -s "BP3e.png" -t 30 --decoder --fonte /usr/share/fonts/dejavu/DejaVuSans-Bold.ttf
+./codescout.py -m "aux levres" -c $code -i 1 -s "BP3f.png" -t 30 --decoder --fonte /usr/share/fonts/dejavu/DejaVuSans-Bold.ttf
+
+./codescout.py -m "Baden" -c $code -i 1 -s "BP4a.png" -t 30 --decoder --fonte /usr/share/fonts/dejavu/DejaVuSans-Bold.ttf
+./codescout.py -m "Powell" -c $code -i 1 -s "BP4b.png" -t 30 --decoder --fonte /usr/share/fonts/dejavu/DejaVuSans-Bold.ttf
+./codescout.py -m "Fondateur" -c $code -i 1 -s "BP4c.png" -t 30 --decoder --fonte /usr/share/fonts/dejavu/DejaVuSans-Bold.ttf
+./codescout.py -m "du Scoutisme" -c $code -i 1 -s "BP4d.png" -t 30 --decoder --fonte /usr/share/fonts/dejavu/DejaVuSans-Bold.ttf
