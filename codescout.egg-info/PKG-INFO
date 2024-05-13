@@ -1,0 +1,15 @@
+Metadata-Version: 2.1
+Name: codescout
+Version: 0.1
+Summary: Permet de creer des codes scouts
+Home-page: https://github.com/vinfort/codescout
+Author: Vincent Fortin
+Author-email: vincent.fortin@gmail.com
+License: UNKNOWN
+Description: Cette première version de la librairie codescout permet d'encoder des messages à l'aide du code soleil et du code musical. Développé en préparation du Camporee de la Montérégie 2024. (C) Vincent Fortin 2024. [vincent.fortin@gmail.com](mailto:vincent.fortin@gmail.com)
+Platform: UNKNOWN
+Classifier: Development Status :: 3 - Alpha
+Classifier: License :: OSI Approved :: Apache-2.0
+Classifier: Programming Language :: Python :: 3
+Requires-Python: >=3.6
+Description-Content-Type: text/markdown

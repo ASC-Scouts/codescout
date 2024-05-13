@@ -6,10 +6,7 @@ setup(
     author='Vincent Fortin',
     author_email='vincent.fortin@gmail.com',
     description='Permet de creer des codes scouts',
-    long_description='Cette première version de la librairie codescout permet d'encoder des messages à l'aide du code soleil et du code musical.
-Développé en préparation du Camporee de la Montérégie 2024
-(C) Vincent Fortin 2024
-[vincent.fortin@gmail.com](mailto:vincent.fortin@gmail.com)',
+    long_description="Cette première version de la librairie codescout permet d'encoder des messages à l'aide du code soleil et du code musical. Développé en préparation du Camporee de la Montérégie 2024. (C) Vincent Fortin 2024. [vincent.fortin@gmail.com](mailto:vincent.fortin@gmail.com)",
     long_description_content_type='text/markdown',
     url='https://github.com/vinfort/codescout',
     packages=find_packages(),  # Automatically find all packages in the project

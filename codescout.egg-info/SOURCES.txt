@@ -1,0 +1,8 @@
+README.md
+setup.py
+codescout.egg-info/PKG-INFO
+codescout.egg-info/SOURCES.txt
+codescout.egg-info/dependency_links.txt
+codescout.egg-info/requires.txt
+codescout.egg-info/top_level.txt
+tests/__init__.py
