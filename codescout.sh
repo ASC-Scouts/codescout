@@ -43,12 +43,15 @@ code=$1
 
 ./codescout.py -m "Allons" -c $code -i 1 -s "BP3a.png" -t 30 --decoder --fonte /usr/share/fonts/dejavu/DejaVuSans-Bold.ttf
 ./codescout.py -m "donc" -c $code -i 1 -s "BP3b.png" -t 30 --decoder --fonte /usr/share/fonts/dejavu/DejaVuSans-Bold.ttf
-./codescout.py -m "de l'avant" -c $code -i 1 -s "BP3c.png" -t 30 --decoder --fonte /usr/share/fonts/dejavu/DejaVuSans-Bold.ttf
-./codescout.py -m "et le" -c $code -i 1 -s "BP3d.png" -t 30 --decoder --fonte /usr/share/fonts/dejavu/DejaVuSans-Bold.ttf
-./codescout.py -m "sourire" -c $code -i 1 -s "BP3e.png" -t 30 --decoder --fonte /usr/share/fonts/dejavu/DejaVuSans-Bold.ttf
-./codescout.py -m "aux levres" -c $code -i 1 -s "BP3f.png" -t 30 --decoder --fonte /usr/share/fonts/dejavu/DejaVuSans-Bold.ttf
+./codescout.py -m "de" -c $code -i 1 -s "BP3c.png" -t 30 --decoder --fonte /usr/share/fonts/dejavu/DejaVuSans-Bold.ttf
+./codescout.py -m "l'avant" -c $code -i 1 -s "BP3d.png" -t 30 --decoder --fonte /usr/share/fonts/dejavu/DejaVuSans-Bold.ttf
+./codescout.py -m "et le" -c $code -i 1 -s "BP3e.png" -t 30 --decoder --fonte /usr/share/fonts/dejavu/DejaVuSans-Bold.ttf
+./codescout.py -m "sourire" -c $code -i 1 -s "BP3f.png" -t 30 --decoder --fonte /usr/share/fonts/dejavu/DejaVuSans-Bold.ttf
+./codescout.py -m "aux" -c $code -i 1 -s "BP3g.png" -t 30 --decoder --fonte /usr/share/fonts/dejavu/DejaVuSans-Bold.ttf
+./codescout.py -m "levres" -c $code -i 1 -s "BP3h.png" -t 30 --decoder --fonte /usr/share/fonts/dejavu/DejaVuSans-Bold.ttf
 
 ./codescout.py -m "Baden" -c $code -i 1 -s "BP4a.png" -t 30 --decoder --fonte /usr/share/fonts/dejavu/DejaVuSans-Bold.ttf
 ./codescout.py -m "Powell" -c $code -i 1 -s "BP4b.png" -t 30 --decoder --fonte /usr/share/fonts/dejavu/DejaVuSans-Bold.ttf
 ./codescout.py -m "Fondateur" -c $code -i 1 -s "BP4c.png" -t 30 --decoder --fonte /usr/share/fonts/dejavu/DejaVuSans-Bold.ttf
-./codescout.py -m "du Scoutisme" -c $code -i 1 -s "BP4d.png" -t 30 --decoder --fonte /usr/share/fonts/dejavu/DejaVuSans-Bold.ttf
+./codescout.py -m "du" -c $code -i 1 -s "BP4d.png" -t 30 --decoder --fonte /usr/share/fonts/dejavu/DejaVuSans-Bold.ttf
+./codescout.py -m "Scoutisme" -c $code -i 1 -s "BP4e.png" -t 30 --decoder --fonte /usr/share/fonts/dejavu/DejaVuSans-Bold.ttf

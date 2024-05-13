@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 
-# Ce script permet de créer une image au format png contenant un message codé
+# Cette librairie permet de créer une image au format png contenant un message codé
 # avec differents codes scouts:
 #
 # Code soleil: Dans ce code, chaque lettre du message est représentée
@@ -13,9 +13,48 @@
 # monte d'une note jusqu'au M qui est un LA. Ensuite on reprend au dos central
 # pour la lettre M mais avec des noires. On monte encore une fois jusqu'au LA
 # aigu pour Z.
-
+#
+# La fonction principale de cette librairie se nomme codescout. Elle
+# prend deux parametres obligatoires et plusieurs parametres optionnels:
+# - message [requis]:       message a encoder
+# - code [requis]:          nom du code a utiliser pour encoder
+# - taille [defaut=8]:      taille des elements du message en pixels
+# - delimiteur [defaut=':'] caractere a utiliser dans le message pour indiquer
+#                           a la fonction de decouper le message sur plusieurs
+#                           lignes a l'aide de ce delimiteur
+# - interligne [defaut=1]:  permet d'ajouter de l'espace entre les lignes du
+#                           message afin par exemple de laisser de la place pour
+#                           decoder
+# - bordure [defaut=0]:     permet d'ajouter une bordure au message afin par
+#                           exemple de faciliter son decoupage (le parametre
+#                           correspond a la taille en pixels de la bordure
+# - legende [defaut='']:    permet d'ajouter une legende en bas a gauche
+#                           (par exemple une courte instruction, un numero...)
+# - decoder [defaut=False]  indique si oui ou nom on doit afficher le message
+#                           decode sous le code
+# - fonte [default='FreeMono.ttf'] nom de la fonte a utiliser pour la legende
+#                           et le texte decode
+#
+# Attention:
+# 1) ne pas utiliser d'accents dans le texte a encoder
+# 2) si le fichier de fonte n'est pas trouve, la fonte par defaut de la librairie
+#    PIL sera utilisee, et elle est assez petite
+#
+# Exemple d'utilisation:
+# >>> from codescout import codescout
+# >>> image = codescout(message="La bonne humeur:est aussi contagieuse:que la rougeole",
+#                       "soleil",taille=15,bordure=2,legende="2024-05-12",decoder=True)
+# >>> image.save("code.png")
+#
+# Equivalent en version ligne de commande:
+# ./codescout.py -m "La bonne humeur:est aussi contagieuse:que la rougeole"\
+#                   -c soleil -t 15 -b 2 -l "2024-05-12" --decoder
+#
+# Tapez ./codescout.py -h pour obtenir de l'aide sur l'utilisation en mode
+# ligne de commande.
+#
 # Copyright 2024, Vincent Fortin (vincent.fortin@gmail.com)
-
+#
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
 # You may obtain a copy of the License at
