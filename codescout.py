@@ -166,7 +166,7 @@ def dessine_une_note(dessin, lettre, position, portee, rayon, bordure):
     dessin.ellipse((x - rayon, y - rayon, x + rayon, y + rayon), outline='black', fill=fill)
 
     # Si la note est sous ou au-dessus de la portée on ajoute un trait
-    if i in (0,12,13,25):
+    if i in (0, 12, 13, 25):
         dessin.line((x - 2 * rayon, y, x + 2 * rayon, y))
 
     # On ajoute la hampe de la note
@@ -174,6 +174,168 @@ def dessine_une_note(dessin, lettre, position, portee, rayon, bordure):
         dessin.line((x + rayon, y, x + rayon, y - 4 * rayon))
     else:
         dessin.line((x - rayon, y, x - rayon, y + 4 * rayon))
+
+class Encodeur:
+    """
+    Classe générique définissant un encodeur.
+    Chaque code scout reconnu par cette librairie hérite de cette classe
+    """
+
+    def __init__(self, message, delimiteur, taille_elements,
+                 interligne, bordure, legende, fonte, decoder):
+        """
+        En plus d'initialiser les attributs de la classe a partir
+        des options qui sont passees au constructeur, on divise le message
+        en lignes en utilisant le separateur et on calcule la taille du message
+        en nombre de caracteres par ligne. On etablit aussi une taille minimale
+        pour l'image qui tient compte de la presence d'une legende et d'une bordure.
+        """
+        # Initialisation directe de certains attributs de classe
+        # a partir des parametres du constructeur
+        self.taille_elements = taille_elements
+        self.interligne = interligne
+        self.bordure = bordure
+        self.legende = legende
+        self.fonte = fonte
+        self.decoder = decoder
+        # Initialisation de la taille de l'image et du message
+        self.taille_image = [0,0]
+        self.taille_message = [0,0]
+        # On sépare le message sur plusieurs lignes en utilisant le séparateur
+        self.message_split = message.split(delimiteur)
+        # Taille du message en nombre de caractères (considérant la ligne la plus longue)
+        self.taille_message[0] = len(max(self.message_split, key=len))
+        self.taille_message[1] = len(self.message_split)
+        # On augmente la taille de l'image en fonction de la taille
+        # de la bordure et de la presence d'une legende
+        for i in range(2):
+            self.taille_image[i] = bordure * 2
+        if legende != '':
+            self.taille_image[1] += taille_elements * 4
+
+    def creer_image(self):
+        """
+        Creation de l'image et ajout des elements de base (bordure et legende)
+        """
+        # Création d'une image avec la bonne taille
+        self.image = Image.new("1", self.taille_image, "white")
+        # Creation de l'object permettant de dessiner l'image
+        self.dessin = ImageDraw.Draw(self.image)
+        # Ajout d'un cadre
+        for i in range(0, self.bordure):
+            self.dessin.rectangle([i, i,
+                                   self.taille_image[0] - i,
+                                   self.taille_image[1] - i])
+        # Ajout d'une legende en bas a droite
+        if self.legende != '':
+            self.dessin.text([self.bordure + self.taille_elements * 2,
+                              self.taille_image[1] -self.taille_elements * 6 - 1],
+                              self.legende, font=self.fonte)
+
+    def encoder_lettre(self, lettre, i, j):
+        # A redefinir dans chaque classe heritee de celle-ci
+        return
+
+    def encoder_message(self):
+        """
+        Boucle sur les lignes et les caracteres de chaque ligne
+        pour encoder chacun de ceux-ci a l'aide d'une methode
+        redefinie dans chaque classe qui herite de celle-ci.
+        """
+        # Creation de l'image de base (cadre et elements de fond)
+        self.creer_image()
+        # On encode le message ligne par ligne
+        for i in range(self.taille_message[1]):
+            # Encodage de chaque lettre d'une ligne
+            for j in range(len(self.message_split[i])):
+                self.encoder_lettre(self.message_split[i][j], i, j)
+
+class CodeSoleil(Encodeur):
+
+    def __init__(self, message, delimiteur, taille_elements,
+                 interligne, bordure, legende, fonte, decoder):
+        """
+        Definition d'attributs de classe qui permettront de positionner un element encodé
+        sur l'image lors de l'appel à la méthode encoder_lettre.
+        Il faut aussi ajuster la taille de l'image.
+        """
+        super().__init__(message, delimiteur, taille_elements,
+                         interligne, bordure, legende, fonte, decoder)
+        # Longueur des rayons pour les voyelles: 2 fois le rayon du soleil
+        self.longueur_trait_voyelle = taille_elements * 2
+        # Longueur des rayons pour les consonnes: meme que le rayon du soleil
+        self.longueur_trait_consonne = taille_elements
+        # Taille totale d'un soleil en pixel en incluant les rayons et de l'espace autour
+        self.taille_soleil = taille_elements \
+            + 2 * max(self.longueur_trait_consonne, self.longueur_trait_voyelle) \
+            + taille_elements // 2
+        self.taille_image[0] += self.taille_message[0] * self.taille_soleil
+        self.taille_image[1] += self.taille_message[1] * self.taille_soleil * interligne
+
+    def encoder_lettre(self, lettre, i, j):
+        """
+        Methode principale de la classe, qui permet d'encoder la lettre "lettre"
+        a la position (i,j) de l'image.
+        """
+        creer_un_soleil(self.dessin,
+            lettre,
+            ((j + 0.5) * self.taille_soleil + self.bordure,
+            (i * self.interligne + 0.5) * self.taille_soleil + self.bordure),
+            self.taille_elements,
+            self.longueur_trait_voyelle,
+            self.longueur_trait_consonne)
+        if self.decoder:
+            self.dessin.text(((j + 0.3) * self.taille_soleil + self.bordure,
+                              (i * self.interligne + 1) * self.taille_soleil + self.bordure),
+                              lettre,
+                              font=self.fonte)
+
+class CodeMusical(Encodeur):
+
+    def __init__(self, message, delimiteur, taille_elements,
+                 interligne, bordure, legende, fonte, decoder):
+        super().__init__(message, delimiteur, taille_elements,
+                         interligne, bordure, legende, fonte, decoder)
+        """
+        Definition d'attributs de classe qui permettront de positionner un element encodé
+        sur l'image lors de l'appel à la méthode encoder_lettre
+        Il faut aussi ajuster la taille de l'image.
+        """
+        # Taille de l'image en pixel
+        self.taille_portee = taille_elements * 16 + taille_elements * 4 * (interligne - 1)
+        self.taille_image[0] += (self.taille_message[0] + 1) * taille_elements * 3
+        self.taille_image[1] += self.taille_message[1] * self.taille_portee
+
+    def creer_image(self):
+        """
+        Ajout d'elements de fond sur l'image (portee musicale)
+        """
+        super().creer_image()
+        # On dessine les portées
+        for i in range(self.taille_message[1]):
+            for j in range(4 * self.taille_elements,
+                           14 * self.taille_elements,
+                           2 * self.taille_elements):
+                pos_y = j + i * self.taille_portee + self.bordure
+                self.dessin.line([(self.bordure, pos_y),
+                                  (self.taille_image[0] - self.bordure, pos_y)])
+
+    def encoder_lettre(self, lettre, i, j):
+        """
+        Methode principale de la classe, qui permet d'encoder la lettre "lettre"
+        a la position (i,j) de l'image.
+        """
+        # On calcule la position de la note sur la portée
+        x = 3 * self.taille_elements * (j + 0.75) + self.bordure
+        dessine_une_note(self.dessin,
+                         lettre,
+                         j + 1,
+                         i * self.taille_portee,
+                         self.taille_elements,
+                         self.bordure)
+        if self.decoder:
+            self.dessin.text((x, (i + 0.75) * self.taille_portee),
+                             lettre, font=self.fonte, align='center')
 
 def codescout(message, code,
               delimiteur = ':',
@@ -216,105 +378,36 @@ def codescout(message, code,
     if decoder:
         interligne = max(2, interligne)
 
+    # On impose des valeurs minimales a la taille des elements, le nombre d'interlignes
+    # et la taille de la bordure
+    taille = max(1, taille)
+    interligne = max(1, interligne)
+    bordure = max(0, bordure)
+
     # Si on veut ecrire du texte (options legende ou decoder) il faut creer la fonte
     # Si le fichier de fonte n'existe pas on utilise la fonte par defaut
-    if decoder or legende != '':
-        try:
-            fonte = ImageFont.truetype(fonte, taille*4)
-        except IOError:
-            print("La fonte demandée n'existe pas - utilisation de la fonte par défaut")
-            fonte = ImageFont.load_default()
-
-    # On sépare le message sur plusieurs lignes en utilisant le séparateur
-    message_split = message.split(delimiteur)
-
-    # Taille du message en nombre de caractères (considérant la ligne la plus longue)
-    taille_message_x = len(max(message_split, key=len))
-    taille_message_y = len(message_split)
+    try:
+        fonte = ImageFont.truetype(fonte, taille*4)
+    except IOError:
+        fonte = ImageFont.load_default()
 
     if code == 'SOLEIL':
-        # Longueur des rayons pour les voyelles: 2 fois le rayon du soleil
-        longueur_trait_voyelle = taille * 2
-        # Longueur des rayons pour les consonnes: meme que le rayon du soleil
-        longueur_trait_consonne = taille
-        # Taille totale d'un soleil en pixel en incluant les rayons et de l'espace autour
-        taille_soleil = taille \
-                      + 2 * max(longueur_trait_consonne, longueur_trait_voyelle) \
-                      + taille // 2
-        taille_image = [taille_message_x * taille_soleil,
-                        taille_message_y * taille_soleil * interligne]
+        encodeur = CodeSoleil(message, delimiteur, taille,
+                              interligne, bordure, legende, fonte, decoder)
     elif code == 'MUSICAL':
-        # Taille de l'image en pixel
-        taille_portee = taille * 16 + taille * 4 * (interligne - 1)
-        taille_image = [(taille_message_x+1)*taille*3, taille_message_y*taille_portee]
+        encodeur = CodeMusical(message, delimiteur, taille,
+                               interligne, bordure, legende, fonte, decoder)
 
-    # Ajout d'espace pour le cadre et la légende
-    for i in range(2):
-        taille_image[i] = taille_image[i] + bordure * 2
-    if legende != '':
-        taille_image[1] = taille_image[1] + taille * 4
+    encodeur.encoder_message()
 
-    # Création d'une image avec la bonne taille
-    image = Image.new("1", taille_image, "white")
-
-    # Creation de l'object permettant de dessiner l'image
-    dessin = ImageDraw.Draw(image)
-
-    # Ajout d'un cadre
-    for i in range(0,bordure):
-        dessin.rectangle([i,i,taille_image[0]-i,taille_image[1]-i])
-
-    # Ajout d'une legende en bas a droite
-    if legende != '':
-        dessin.text([bordure+taille*2,taille_image[1]-taille*6-1], legende, font=fonte)
-
-    if code == 'MUSICAL':
-        # On dessine les portées
-        for i in range(taille_message_y):
-            for j in range(4*taille,14*taille,2*taille):
-                pos_y = j + i * taille_portee + bordure
-                dessin.line([(bordure,pos_y),(taille_image[0]-bordure,pos_y)])
-
-    # On encode le message ligne par ligne
-    for i in range(taille_message_y):
-        # Encodage de chaque lettre d'une ligne
-        for j in range(len(message_split[i])):
-            if code == 'SOLEIL':
-                creer_un_soleil(dessin,
-                    message_split[i][j],
-                    ((j + 0.5) * taille_soleil + bordure,
-                     (i * interligne + 0.5) * taille_soleil + bordure),
-                    taille,
-                    longueur_trait_voyelle,
-                    longueur_trait_consonne)
-                if decoder:
-                    dessin.text(((j + 0.3) * taille_soleil + bordure,
-                                 (i * interligne + 1) * taille_soleil + bordure),
-                                 message_split[i][j],
-                                 font=fonte)
-            elif code == 'MUSICAL':
-                # On calcule la position de la note sur la portée
-                x = 3*taille*(j+0.75) + bordure
-                dessine_une_note(dessin,
-                                 message_split[i][j],
-                                 j + 1,
-                                 i*taille_portee,
-                                 taille,
-                                 bordure)
-                if decoder:
-                    dessin.text((x, (i + 0.75) * taille_portee),
-                                 message_split[i][j],
-                                 font=fonte,
-                                 align='center')
-
-    return image
+    return encodeur.image
 
 if __name__ == '__main__':
 
     print("\n====================================================")
     print("Encodage d'un message à l'aide d'un code scout")
     print("Auteur: Goéland Astucieux (vincent.fortin@gmail.com)")
-    print("Version du 12 mai 2024")
+    print("Version du 13 mai 2024")
     print("====================================================\n")
 
     # Arguments du script
@@ -348,9 +441,9 @@ if __name__ == '__main__':
     image_code = codescout(args.message,
                            args.code,
                            delimiteur = args.delimiteur,
-                           taille = max(1, args.taille),
-                           interligne = max(1, args.interligne),
-                           bordure = max(0, args.bordure),
+                           taille = args.taille,
+                           interligne = args.interligne,
+                           bordure = args.bordure,
                            legende = args.legende,
                            fonte = args.fonte,
                            decoder = args.decoder)
