@@ -1,5 +1,7 @@
 #!/usr/bin/bash
+
 code=$1
+
 ./codescout.py -m "Un castor joue avec:et comme les autres" -c $code -i 2 -b 3
 ./codescout.py -m "Un sourire est une:cle qui ouvre:bien des coeurs" -c $code -i 2 -b 3
 ./codescout.py -m "Essayez de quitter:ce monde en le:laissant un peu:meilleur que:vous ne l'avez trouve" -c $code -i 2 -b 3

@@ -91,6 +91,44 @@ from PIL import Image, ImageDraw, ImageFont
 # Codes reconnus par cette librairie
 codes = ('SOLEIL', 'MUSICAL')
 
+def dessine_une_note(dessin, lettre, position, portee, rayon, bordure):
+    """
+    Cette fonction dessine une note de musique dans l'image "dessin".
+    La note choisie est fonction de la lettre "lettre" et est placée à
+    la position latérale "position" et la position verticale "portée".
+    Le rayon de la note est "rayon", et l'on tien compte de la présence
+    d'une bordure de "bordure" pixels.
+    """
+
+    # On met la lettre en majuscule
+    lettre = lettre.upper()
+
+    # Si ce n'est pas une lettre on ne dessine rien
+    if not lettre.isalpha():
+        return
+
+    # On calcule la position de la note sur la portée
+    i = ord(lettre) - 65 # 65 est le code ASCII de la lettre A
+    y = 14 * rayon - rayon * (i % 13) + portee + bordure
+    x = 3 * rayon * position + bordure
+
+    # On détermine la couleur (blanche ou noire de la note)
+    # blanche pour A-M, noire pour N-Z
+    fill = None if i <= 12 else 'black'
+
+    # On dessine la note
+    dessin.ellipse((x - rayon, y - rayon, x + rayon, y + rayon), outline='black', fill=fill)
+
+    # Si la note est sous ou au-dessus de la portée on ajoute un trait
+    if i in (0, 12, 13, 25):
+        dessin.line((x - 2 * rayon, y, x + 2 * rayon, y))
+
+    # On ajoute la hampe de la note
+    if (i%13) < 5:
+        dessin.line((x + rayon, y, x + rayon, y - 4 * rayon))
+    else:
+        dessin.line((x - rayon, y, x - rayon, y + 4 * rayon))
+
 def creer_un_soleil(dessin,
                     lettre,
                     centre,
@@ -136,44 +174,6 @@ def creer_un_soleil(dessin,
         y_2 = centre[1] + (rayon + longueur_trait) * math.sin(math.radians(angle))
         # On dessine le trait
         dessin.line((x_1, y_1, x_2, y_2), fill="black", width=1)
-
-def dessine_une_note(dessin, lettre, position, portee, rayon, bordure):
-    """
-    Cette fonction dessine une note de musique dans l'image "dessin".
-    La note choisie est fonction de la lettre "lettre" et est placée à
-    la position latérale "position" et la position verticale "portée".
-    Le rayon de la note est "rayon", et l'on tien compte de la présence
-    d'une bordure de "bordure" pixels.
-    """
-
-    # On met la lettre en majuscule
-    lettre = lettre.upper()
-
-    # Si ce n'est pas une lettre on ne dessine rien
-    if not lettre.isalpha():
-        return
-
-    # On calcule la position de la note sur la portée
-    i = ord(lettre) - 65 # 65 est le code ASCII de la lettre A
-    y = 14 * rayon - rayon * (i % 13) + portee + bordure
-    x = 3 * rayon * position + bordure
-
-    # On détermine la couleur (blanche ou noire de la note)
-    # blanche pour A-M, noire pour N-Z
-    fill = None if i <= 12 else 'black'
-
-    # On dessine la note
-    dessin.ellipse((x - rayon, y - rayon, x + rayon, y + rayon), outline='black', fill=fill)
-
-    # Si la note est sous ou au-dessus de la portée on ajoute un trait
-    if i in (0, 12, 13, 25):
-        dessin.line((x - 2 * rayon, y, x + 2 * rayon, y))
-
-    # On ajoute la hampe de la note
-    if (i%13) < 5:
-        dessin.line((x + rayon, y, x + rayon, y - 4 * rayon))
-    else:
-        dessin.line((x - rayon, y, x - rayon, y + 4 * rayon))
 
 class Encodeur:
     """
