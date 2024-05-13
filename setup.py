@@ -12,7 +12,7 @@ setup(
     packages=find_packages(),  # Automatically find all packages in the project
     classifiers=[
         'Development Status :: 3 - Alpha',
-        'License :: OSI Approved :: Apache-2.0',
+        'License :: OSI Approved :: Apache Software License',
         'Programming Language :: Python :: 3',
     ],
     python_requires='>=3.6',
