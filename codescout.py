@@ -113,10 +113,11 @@ def codescout(message,
               interligne = 1,
               bordure = 0,
               legende = '',
-              nom_fonte = 'FreeMono.ttf',
+              fonte = 'FreeMono.ttf',
               decoder = False):
 
     # Validation du nom du code
+    code = code.upper()
     codes = ('SOLEIL','MUSICAL')
     if code not in codes:
         print(f'Codes reconnus: {codes}')
@@ -124,7 +125,15 @@ def codescout(message,
 
     # On ajuste l'interligne a 2 au minimum si on doit ajouter le message decode
     if decoder:
-        interligne = max(2, args.interligne)
+        interligne = max(2, interligne)
+
+    # Si on veut ecrire du texte (options legende ou decoder) il faut creer la fonte
+    # Si le fichier de fonte n'existe pas on utilise la fonte par defaut
+    if decoder or legende != '':
+        try:
+            fonte = ImageFont.truetype(fonte, taille*4)
+        except:
+            fonte = ImageFont.load_default()
 
     # On sépare le message sur plusieurs lignes en utilisant le séparateur
     message_split = message.split(delimiteur)
@@ -163,7 +172,6 @@ def codescout(message,
         dessin.rectangle([i,i,taille_image[0]-i,taille_image[1]-i])
 
     # Ajout d'une legende en bas a droite
-    fonte = ImageFont.truetype(nom_fonte, taille*4)
     if legende != '':
         dessin.text([bordure+taille*2,taille_image[1]-taille*6-1], legende, font=fonte)
     
@@ -238,14 +246,14 @@ if __name__ == '__main__':
     interligne = max(1, args.interligne)
     bordure = max(0, args.bordure)
     legende = args.legende
-    nom_fonte = args.fonte
+    fonte = args.fonte
     decoder = args.decoder
 
     print("Message à encoder:")
     print(args.message)
 
     # Appel de la fonction principale en utilisant les arguments de la ligne de commande
-    image = codescout(message, code, delimiteur, taille, interligne, bordure, legende, nom_fonte, decoder)
+    image = codescout(message, code, delimiteur, taille, interligne, bordure, legende, fonte, decoder)
 
     # Si l'usager n'a pas fourni de nom de fichier on en construit un a partir du message
     if sortie == "":
