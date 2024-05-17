@@ -46,6 +46,14 @@ spécifier le nom du fichier dans lequel sauvegarder l'image (au format PNG):
 Si ce paramètre n'est pas fourni, un nom de fichier est construit par le script
 à partir du message.
 
+Un autre paramètre permet d'afficher des informations utiles au déboguage:
+- debug [defaut=False]
+
+De plus, en mode de ligne de commande il y a des valeurs par défaut pour les
+paramètres "message" et "code"
+- message par défaut: "ABCDEFGHIJKLM:NOPQRSTUVWXYZ"
+- code par défaut: "soleil"
+
 Attention:
 1) ne pas utiliser d'accents dans le texte a encoder
 2) si le fichier de fonte n'est pas trouve, la fonte par defaut de la librairie
@@ -87,6 +95,7 @@ import math
 import argparse
 import re
 from PIL import Image, ImageDraw, ImageFont
+from unidecode import unidecode
 
 # Codes reconnus par cette librairie
 codes = ('SOLEIL', 'MUSICAL')
@@ -100,8 +109,8 @@ def dessine_une_note(dessin, lettre, position, portee, rayon, bordure):
     d'une bordure de "bordure" pixels.
     """
 
-    # On met la lettre en majuscule
-    lettre = lettre.upper()
+    # On met la lettre en majuscule et on enleve les accents
+    lettre = unidecode(lettre.upper())
 
     # Si ce n'est pas une lettre on ne dessine rien
     if not lettre.isalpha():
@@ -145,7 +154,7 @@ def creer_un_soleil(dessin,
     """
 
     # On met la lettre en majuscule
-    lettre = lettre.upper()
+    lettre = unidecode(lettre.upper())
 
     # Si ce n'est pas une lettre on ne dessine rien
     if not lettre.isalpha():
@@ -407,14 +416,16 @@ if __name__ == '__main__':
     print("\n====================================================")
     print("Encodage d'un message à l'aide d'un code scout")
     print("Auteur: Goéland Astucieux (vincent.fortin@gmail.com)")
-    print("Version du 13 mai 2024")
+    print("Version du 16 mai 2024")
     print("====================================================\n")
 
     # Arguments du script
     parser = argparse.ArgumentParser(description='Encodeur en code scout')
-    parser.add_argument('--message', '-m', type=str, required=True,
+    parser.add_argument('--message', '-m', type=str, required=False,
+        default='ABCDEFGHIJKLM:NOPQRSTUVWXYZ',
         help='Message à encoder')
-    parser.add_argument('--code', '-c', type=str, required=True,
+    parser.add_argument('--code', '-c', type=str, required=False,
+        default='musical',
         help='Nom du code à utiliser (soleil ou musical)')
     parser.add_argument('--sortie', '-s', type=str, required=False, default="",
         help='Nom du fichier qui contiendra le message codé')
@@ -431,11 +442,16 @@ if __name__ == '__main__':
     parser.add_argument('--fonte', '-f', type=str, required=False, default='FreeMono.ttf',
         help="Fonte à utiliser pour la légende")
     parser.add_argument('--decoder', action='store_true', required=False, default=False,
-        help="Indique s'il faut afficher le messgae décodé")
+        help="Indique s'il faut afficher le message décodé")
+    parser.add_argument('--debug', action='store_true', required=False, default=False,
+        help="Indique si l'application est démarrée en mode de déboguage")
     args = parser.parse_args()
 
-    print("Message à encoder:")
-    print(args.message)
+    debug = args.debug
+
+    if debug:
+        print("Message à encoder:")
+        print(args.message)
 
     # Appel de la fonction principale en utilisant les arguments de la ligne de commande
     image_code = codescout(args.message,
@@ -457,5 +473,6 @@ if __name__ == '__main__':
     # On sauvegarde le résultat
     image_code.save(fichier_sortie)
 
-    print("\nNom du fichier contenant l'image produite:")
-    print(fichier_sortie)
+    if debug:
+        print("\nNom du fichier contenant l'image produite:")
+        print(fichier_sortie)
