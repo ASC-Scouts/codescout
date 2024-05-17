@@ -411,7 +411,7 @@ def codescout(message, code,
 
     return encodeur.image
 
-if __name__ == '__main__':
+def main():
 
     print("\n====================================================")
     print("Encodage d'un message à l'aide d'un code scout")
@@ -476,3 +476,6 @@ if __name__ == '__main__':
     if debug:
         print("\nNom du fichier contenant l'image produite:")
         print(fichier_sortie)
+
+if __name__ == '__main__':
+    main()
