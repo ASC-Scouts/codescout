@@ -48,10 +48,9 @@ Si ce paramètre n'est pas fourni, un nom de fichier est construit par le script
 à partir du message.
 
 Attention:
-1) ne pas utiliser d'accents dans le texte a encoder
-2) si le fichier de fonte n'est pas trouve, la fonte par defaut de la librairie
+1) si le fichier de fonte n'est pas trouve, la fonte par defaut de la librairie
    PIL sera utilisee, et elle est assez petite
-3) en mode ligne de commande, comme le script choisit le nom du fichier de sortie,
+2) en mode ligne de commande, lorsque le script choisit le nom du fichier de sortie,
    il peut écraser un fichier existant. Le nom du fichier de sortie comprend tous
    les caractères entre a et z du message et a l'extension PNG. Si le script n'a
    pas le droit d'écrire dans le répertoire courant, une erreur se produira et
@@ -75,3 +74,22 @@ Equivalent en version ligne de commande:
 
 Tapez ``./codescout.py -h`` pour obtenir de l'aide sur l'utilisation en mode
 ligne de commande.
+
+Une application flask a été ajoutée afin de produire des codes à l'aide de requêtes http.
+On peut y accéder ainsi:
+
+````
+from codescout import app
+````
+
+Pour démarrer un serveur de développement, on utilisera la méthode app.run().
+
+Le serveur de développement peut aussi être démarré à partir du script flask_codescout.py.
+
+Ce script lit un fichier de configuration pour déterminer les valeurs par défaut lors de
+l'appel à la fonction codescout() et aussi lors du démarrage du serveur de développement.
+
+Le nom du fichier de configuration peut être spécifié à l'aide de l'option --config.
+
+On peut aussi lancer le serveur de développement en mode de déboguage avec l'option --debug.
+

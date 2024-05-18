@@ -19,7 +19,7 @@ classifiers = [
 ]
 keywords = ["code", "scout"]
 dependencies = [
-    "pillow", "unidecode"
+    "pillow", "unidecode", "flask"
 ]
 requires-python = ">=3.6"
 
@@ -27,4 +27,4 @@ requires-python = ">=3.6"
 Homepage = "https://github.com/vinfort/codescout"
 
 [project.scripts]
-codescout.py = "codescout.flask_codescout:main"
+codescout.app = "codescout.flask_codescout:main"
