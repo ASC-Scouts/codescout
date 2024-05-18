@@ -14,6 +14,9 @@ from codescout import codescout
 config = configparser.ConfigParser()
 config_file = 'codescout.ini'
 
+# Indique si on est en mode debug
+debug = False
+
 # Serveur http
 app = Flask(__name__)
 
@@ -33,6 +36,15 @@ def http_codescout():
             config['usager'][k] = param
         else:
             config['usager'][k] = config['defaut'][k]
+    # Affichage de la configuration
+    if debug:
+        print("Démarrage du serveur http")
+        print("Configuration par défaut:")
+        for s in config.sections():
+            print(f"[{s}]")
+            for k in config[s].keys():
+                print(f"{k}={config[s][k]}")
+            print("")
     # Appeler codecoutvotre script Python pour générer l'image
     img = codescout(
             config['usager']['message'],
@@ -49,8 +61,11 @@ def http_codescout():
     return send_file(config['sortie']['image'], mimetype='image/png')
 
 def main():
+    global config_file
+    global debug
+
     parser = argparse.ArgumentParser(description='API RESTful pour codescout')
-    parser.add_argument('--config', '-c', type=str, required=False, default="",
+    parser.add_argument('--config', '-c', type=str, required=False,
         help='Nom du fichier de configuration')
     parser.add_argument('--debug', action='store_true', required=False, default=False,
         help="Indique si l'application est démarrée en mode de déboguage")
@@ -61,10 +76,12 @@ def main():
     # On change le nom du fichier de config s'il est passe en parametre
     if args.config is not None:
         config_file = args.config
-    
-    if debug:
-        print("Démarrage du serveur http")
-    app.run(debug=debug)
+
+    # Lecture du fichier de configuration    
+    config.read(config_file)
+    config['usager'] = {}
+
+    app.run(debug=debug, host=config['serveur']['host'], port=int(config['serveur']['port']))
 
 if __name__ == '__main__':
     main()
