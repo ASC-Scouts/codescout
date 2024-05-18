@@ -1,2 +1,2 @@
 from .codescout import codescout
-from .http_codescout import app
+from .flask_codescout import app
