@@ -1,0 +1,91 @@
+<html>
+
+<body>
+
+<h1>
+Interface RESTful pour le package python codescout
+</h1>
+
+<p>
+Cet API RESTful permet de générer des messages à décoder en utilisant différentes méthodes d'encodage populaires chez les Scouts.
+</p>
+
+<p>
+Voir https://github.com/ASC-Scouts/codescout
+</p>
+
+<h2>
+Paramètres de l'API:
+</h2>
+
+<table>
+<tr>
+    <th>Paramètre</th>
+    <th>Valeur</th>
+</tr>
+<tr>
+    <td>message</td>
+    <td>message a encoder</td>
+</tr>
+<tr>
+    <td>code</td>
+    <td>code à utiliser, parmi les codes suivants: soleil, musical</td>
+</tr>
+<tr>
+    <td>taille</td>
+    <td>taille des elements du message en pixels [défaut 8]</td>
+</tr>
+<tr>
+    <td>delimiteur</td>
+    <td>caractere a utiliser dans le message pour indiquer a l'API de decouper le message sur plusieurs lignes a l'aide de ce delimiteur [défaut :]</td>
+</tr>
+<tr>
+    <td>interligne</td>
+    <td>permet d'ajouter de l'espace entre les lignes du message afin par exemple de laisser de la place pour decoder [défaut 1]</td>
+</tr>
+<tr>
+    <td>bordure</td>
+    <td>permet d'ajouter une bordure au message afin par exemple de faciliter son decoupage (le paramètre correspond a la taille en pixels de la bordure) [défaut 0]</td>
+</tr>
+<tr>
+    <td>legende</td>
+    <td>permet d'ajouter une legende en bas a gauche (par exemple une courte instruction, un numéro...) [défaut aucune]</td>
+</tr>
+<tr>
+    <td>decoder</td>
+    <td>indique si oui ou non on doit afficher le message décodé sous le code (1=oui, 0=non) [défaut 1]</td>
+</tr>
+<tr>
+    <td>fonte</td>
+    <td>nom de la fonte a utiliser pour la legende et le texte décodé [défaut DejaVuSansMono.ttf]</td>
+</tr>
+
+</table>
+
+<h2>
+Exemples d'utilisation:
+</h2>
+
+<p>
+Encoder "Baden Powell" sur deux lignes avec le code musical:
+</p>
+<p>
+<a href="https://scouts.pythonanywhere.com/codescout?message=Baden:Powell&code=musical">https://scouts.pythonanywhere.com/codescout?message=Baden:Powell&code=musical</a>
+</p>
+
+<p>
+Encoder "Baden Powell" sur deux lignes avec le code soleil en augmentant la taille et en changeant la fonte:
+</p>
+<p>
+<a href="https://scouts.pythonanywhere.com/codescout?message=Baden:Powell&code=soleil&taille=15&fonte=Cousine-Regular.ttf">https://scouts.pythonanywhere.com/codescout?message=Baden:Powell&code=soleil&taille=15&fonte=Cousine-Regular.ttf</a>
+</p>
+
+<p>
+Encoder "Justice Respect Confiance Dépassement" sur quatre lignes avec le code soleil, ne pas afficher le message décodé et augmenter l'espace entre les lignes:
+</p>
+<p>
+<a href="https://scouts.pythonanywhere.com/codescout?message=Justice:Respect:Confiance:Dépassement&code=soleil&decoder=0&interligne=3">https://scouts.pythonanywhere.com/codescout?message=Justice:Respect:Confiance:Dépassement&code=soleil&decoder=0&interligne=3</a>
+</p>
+
+</body>
+</html>
