@@ -47,7 +47,8 @@ def http_codescout():
             bordure = int(config['usager']['bordure']),
             legende = config['usager']['legende'],
             fonte = config['usager']['fonte'],
-            decoder = (config['usager']['decoder'] == '1'))
+            decoder = (config['usager']['decoder'] == '1'),
+            decalage = int(config['usager']['decalage']))
     img.save(config['sortie']['image'])
     # Renvoyer l'image générée au client
     return send_file(config['sortie']['image'], mimetype='image/png')
