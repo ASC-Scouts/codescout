@@ -15,6 +15,13 @@ monte d'une note jusqu'au M qui est un LA. Ensuite on reprend au dos central
 pour la lettre M mais avec des noires. On monte encore une fois jusqu'au LA
 aigu pour Z.
 
+Code alphabet: Dans ce code, chaque lettre du message est décalée par un
+nombre de positions dans l'alphabet défini par le paramètre <decalage>
+
+Code Avocat: équivalent au code alphabet avec un décalage de +8 (A vaut K)
+
+Code Escalier: équivalent au code alphabet avec un décalage de -10 (S K liés)
+
 La fonction principale de cette librairie se nomme codescout. Elle
 prend deux parametres obligatoires et plusieurs parametres optionnels:
 - message [requis]:       message a encoder
@@ -98,7 +105,7 @@ from PIL import Image, ImageDraw, ImageFont
 from unidecode import unidecode
 
 # Codes reconnus par cette librairie
-codes = ('SOLEIL', 'MUSICAL')
+codes = ('SOLEIL', 'MUSICAL','AVOCAT','ESCALIER', 'ALPHABET')
 
 def dessine_une_note(dessin, lettre, position, portee, rayon, bordure):
     """
@@ -183,6 +190,23 @@ def creer_un_soleil(dessin,
         y_2 = centre[1] + (rayon + longueur_trait) * math.sin(math.radians(angle))
         # On dessine le trait
         dessin.line((x_1, y_1, x_2, y_2), fill="black", width=1)
+
+def decalage_alphabet(caractere, decalage):
+    caractere = unidecode(caractere)
+    if 'A' <= caractere <= 'Z':
+        return chr((ord(caractere) - ord('A') + decalage) % 26 + ord('A'))
+    elif 'a' <= caractere <= 'z':
+        return chr((ord(caractere) - ord('a') + decalage) % 26 + ord('a'))
+    else:
+        return caractere
+
+def code_alphabet(code, decalage, caractere):
+    if code == 'AVOCAT':
+        return decalage_alphabet(caractere, 10)
+    elif code == 'ESCALIER':
+        return decalage_alphabet(caractere, -8)
+    else:
+        return decalage_alphabet(caractere, decalage)
 
 class Encodeur:
     """
@@ -346,6 +370,37 @@ class CodeMusical(Encodeur):
             self.dessin.text((x, (i + 0.75) * self.taille_portee),
                              lettre, font=self.fonte, align='center')
 
+class CodeAlphabet(Encodeur):
+
+    def __init__(self, code, decalage, message, delimiteur, taille_elements,
+                 interligne, bordure, legende, fonte, decoder):
+        super().__init__(message, delimiteur, taille_elements,
+                         interligne, bordure, legende, fonte, decoder)
+        """
+        Definition d'attributs de classe qui permettront de positionner un element encodé
+        sur l'image lors de l'appel à la méthode encoder_lettre
+        Il faut aussi ajuster la taille de l'image.
+        """
+        # Taille de l'image en pixel
+        self.taille_image[0] += (self.taille_message[0] + 1) * taille_elements * 3
+        self.taille_image[1] += self.taille_message[1] * taille_elements * 3 * (2 + interligne - 1)
+        self.code = code
+        self.decalage = decalage
+
+    def encoder_lettre(self, lettre, i, j):
+        """
+        Methode principale de la classe, qui permet d'encoder la lettre "lettre"
+        a la position (i,j) de l'image.
+        """
+        # On calcule la position de la note sur la portée
+        x = 3 * self.taille_elements * (j + 0.5) + self.bordure
+        y = (i * (1 + self.interligne)) * self.taille_elements * 3
+        self.dessin.text((x, y), code_alphabet(self.code, self.decalage, lettre),
+            font=self.fonte, align='center')
+        if self.decoder:
+            y = (i * (1 + self.interligne) + 1.5) * self.taille_elements * 3
+            self.dessin.text((x, y), lettre, font=self.fonte, align='center')
+
 def codescout(message, code,
               delimiteur = ':',
               taille = 8,
@@ -353,7 +408,8 @@ def codescout(message, code,
               bordure = 0,
               legende = '',
               fonte = 'FreeMono.ttf',
-              decoder = False):
+              decoder = False,
+              decalage = 0):
     """
     Fonction principale qui construit le code scout et retourne une image.
     Elle prend deux parametres obligatoires et plusieurs parametres optionnels:
@@ -375,6 +431,8 @@ def codescout(message, code,
                               et le texte decode
     - decoder [defaut=False]  indique si oui ou nom on doit afficher le message
                               decode sous le code
+    - decalage [defaut=0]     indique le nombre de lettres de decalage pour les
+                              codes de type "alphabet" (ex: AVOCAT = 8)
     """
 
     # Validation du nom du code
@@ -405,6 +463,9 @@ def codescout(message, code,
                               interligne, bordure, legende, fonte, decoder)
     elif code == 'MUSICAL':
         encodeur = CodeMusical(message, delimiteur, taille,
+                               interligne, bordure, legende, fonte, decoder)
+    else:
+        encodeur = CodeAlphabet(code, decalage, message, delimiteur, taille,
                                interligne, bordure, legende, fonte, decoder)
 
     encodeur.encoder_message()
@@ -443,6 +504,8 @@ def main():
         help="Fonte à utiliser pour la légende")
     parser.add_argument('--decoder', action='store_true', required=False, default=False,
         help="Indique s'il faut afficher le message décodé")
+    parser.add_argument('--decalage', type=int, required=False, default=0,
+        help="Nombre de lettres de décalage pour le code alphabet")
     parser.add_argument('--debug', action='store_true', required=False, default=False,
         help="Indique si l'application est démarrée en mode de déboguage")
     args = parser.parse_args()
@@ -462,7 +525,8 @@ def main():
                            bordure = args.bordure,
                            legende = args.legende,
                            fonte = args.fonte,
-                           decoder = args.decoder)
+                           decoder = args.decoder,
+                           decalage = args.decalage)
 
     # Si l'usager n'a pas fourni de nom de fichier on en construit un a partir du message
     if args.sortie == "":
