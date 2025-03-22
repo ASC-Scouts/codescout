@@ -1,0 +1,199 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Encodage de messages à l'aide de la librairie codescout</title>
+    <style>
+        /* Styles globaux */
+        body {
+            font-family: 'Arial', sans-serif;
+            background-color: #f4f4f4;
+            color: #2e7d32; /* Vert foncé */
+            margin: 0;
+            padding: 0;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            min-height: 100vh;
+        }
+
+        /* En-tête */
+        header {
+            background-color: #388e3c; /* Vert scout */
+            color: #fff;
+            width: 100%;
+            padding: 20px;
+            text-align: center;
+            font-size: 24px;
+            font-weight: bold;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+        }
+
+        /* Conteneur principal */
+        main {
+            background-color: white;
+            width: 90%;
+            max-width: 800px;
+            margin: 20px auto;
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
+        }
+
+        .form-group {
+            margin-bottom: 15px;
+        }
+
+        label {
+            display: block;
+            font-weight: bold;
+            margin-bottom: 5px;
+        }
+
+        input, select, button {
+            width: 100%;
+            padding: 10px;
+            font-size: 16px;
+            border-radius: 5px;
+            border: 1px solid #ccc;
+        }
+
+        button {
+            background-color: #388e3c; /* Vert scout */
+            color: white;
+            border: none;
+            cursor: pointer;
+            font-weight: bold;
+            transition: background-color 0.3s ease;
+        }
+
+        button:hover {
+            background-color: #2e7d32;
+        }
+
+        .options {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 15px;
+        }
+
+        .option {
+            flex: 1;
+            min-width: 200px;
+        }
+
+        #status {
+            margin-top: 20px;
+            font-style: italic;
+        }
+
+        #result {
+            margin-top: 20px;
+            max-width: 100%;
+            border: 2px solid #388e3c; /* Bordure verte */
+            border-radius: 8px;
+            display: none;
+        }
+    </style>
+</head>
+<body>
+
+    <header>
+        Encodage de messages scouts à l'aide de l'API <a href="https://scouts.pythonanywhere.com">codescout</a>
+    </header>
+
+    <main>
+        <div class="form-group">
+            <label for="query">Message à encoder (utilisez seulement des lettres et des espaces, insérez un ":" pour changer de ligne) </label>
+            <input type="text" id="query" placeholder="Entrez votre message...">
+        </div>
+
+        <div class="options">
+            <div class="option form-group">
+                <label for="code">Type de Code</label>
+                <select id="code" onchange="toggleDecalage()">
+                    <option value="soleil">Soleil</option>
+                    <option value="musical">Musical</option>
+                    <option value="semaphore">Sémaphore</option>
+                    <option value="braille">Braille</option>
+                    <option value="alphabet">Alphabet</option>
+                    <option value="avocat">Avocat</option>
+                    <option value="escalier">Escalier</option>
+                </select>
+            </div>
+
+            <div class="option form-group">
+                <label for="taille">Taille (px)</label>
+                <input type="number" id="taille" value="8" min="5" max="50">
+            </div>
+
+            <div class="option form-group">
+                <label for="interligne">Interligne</label>
+                <input type="number" id="interligne" value="1" min="0" max="10">
+            </div>
+
+            <div class="option form-group">
+                <label for="decoder">Afficher le message décodé?</label>
+                <select id="decoder">
+                    <option value="1">Oui</option>
+                    <option value="0">Non</option>
+                </select>
+            </div>
+
+            <div class="option form-group" id="decalage-container" style="display: none;">
+                <label for="decalage">Décalage</label>
+                <input type="number" id="decalage" value="3" min="-26" max="26">
+            </div>
+        </div>
+
+        <button onclick="fetchImage()">Générer</button>
+        <p id="status"></p>
+        <img id="result" alt="Résultat de l'API">
+    </main>
+
+    <script>
+        function toggleDecalage() {
+            const code = document.getElementById('code').value;
+            const decalageContainer = document.getElementById('decalage-container');
+            decalageContainer.style.display = (code === 'alphabet') ? 'block' : 'none';
+        }
+
+        function fetchImage() {
+            const query = document.getElementById('query').value.trim();
+            const code = document.getElementById('code').value;
+            const taille = document.getElementById('taille').value;
+            const interligne = document.getElementById('interligne').value;
+            const decoder = document.getElementById('decoder').value;
+            const statusDiv = document.getElementById('status');
+            const resultImg = document.getElementById('result');
+
+            if (!query) {
+                statusDiv.textContent = "Veuillez entrer un message.";
+                return;
+            }
+
+            statusDiv.textContent = "Chargement...";
+            resultImg.style.display = "none";
+
+            let url = `https://scouts.pythonanywhere.com/codescout?message=${encodeURIComponent(query)}&code=${code}&taille=${taille}&interligne=${interligne}&decoder=${decoder}`;
+
+            if (code === 'alphabet') {
+                const decalage = document.getElementById('decalage').value;
+                url += `&decalage=${decalage}`;
+            }
+
+            resultImg.src = url;
+            resultImg.onload = () => {
+                statusDiv.textContent = "Résultat :";
+                resultImg.style.display = "block";
+            };
+            resultImg.onerror = () => {
+                statusDiv.textContent = "Erreur lors du chargement de l'image.";
+                resultImg.style.display = "none";
+            };
+        }
+    </script>
+
+</body>
+</html>

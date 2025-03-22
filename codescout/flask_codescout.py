@@ -47,7 +47,9 @@ def http_codescout():
             bordure = int(config['usager']['bordure']),
             legende = config['usager']['legende'],
             fonte = config['usager']['fonte'],
-            decoder = (config['usager']['decoder'] == '1'))
+            decoder = (config['usager']['decoder'] == '1'),
+            decalage = int(config['usager']['decalage']),
+            fontes = config['fontes'])
     img.save(config['sortie']['image'])
     # Renvoyer l'image générée au client
     return send_file(config['sortie']['image'], mimetype='image/png')
@@ -56,6 +58,11 @@ def http_codescout():
 @app.route('/')
 def http_aide():
     return render_template('codescout.html')
+
+# GUI
+@app.route('/gui/')
+def http_gui():
+    return render_template('codescout_gui.html')
 
 # Pour utilisation en mode ligne de commande avec le serveur de développement
 def main():
