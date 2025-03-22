@@ -118,6 +118,10 @@
     <h2>Introduction</h2>
     <p>Bienvenue dans l'API RESTful de Codescout! Cette API permet de générer des images contenant des messages codés à l'aide de divers codes scouts. Vous pouvez utiliser les endpoints pour créer et récupérer ces images à partir de requêtes HTTP.</p>
 
+    <h2>Interface usager</h2>
+    <p>Une interface usager est disponible pour accéder aux fonctionnalités de l'API</p>
+    <a href="https://scouts.pythonanywhere.com/gui">https://scouts.pythonanywhere.com/gui</a>
+
     <h2>URL de base</h2>
     <p>Toutes les requêtes API doivent être faites à la base URL suivante:</p>
     <code>https://scouts.pythonanywhere.com/</code>
@@ -231,7 +235,9 @@
     <li><a href="https://scouts.pythonanywhere.com/codescout?code=soleil">code soleil</a>: chaque lettre est remplacée par un soleil dont le nombre de rayons indique la position dans l'alphabet</li>
     <li><a href="https://scouts.pythonanywhere.com/codescout?code=musical">code musical</a>: chaque lettre est remplacée par une note de musique où les lettres de A-M deviennent des blanches
         entre DO central et LA aigu et les lettres de N-Z deviennent des noires entre DO central et LA aigu </li>
-    <li><a href="https://scouts.pythonanywhere.com/codescout?code=alphabet&decalage=1&interligne=3">code alphabet</a>: chaque lettre est décalée par un nombre de lettres dans l'alphabet défini par le paramètre "décalage"</li>
+    <li><a href="https://scouts.pythonanywhere.com/codescout?code=semaphore&interligne=3">code du sémaphore</a>: le code illustre la position des bras</li>
+    <li><a href="https://scouts.pythonanywhere.com/codescout?code=braille&interligne=3">alphabet braille</a>: des points noirs illustrent la position des bosses dans le papier</li>
+    <li><a href="https://scouts.pythonanywhere.com/codescout?code=alphabet&decalage=1&interligne=3">code alphabet</a>: chaque lettre est décalée par un nombre de lettres dans l'alphabet défini par le paramètre "décalage" (1 dans cet exemple)</li>
     <li><a href="https://scouts.pythonanywhere.com/codescout?code=avocat&interligne=3">code avocat</a>: équivalent au code alphabet avec un décalage de +8</li>
     <li><a href="https://scouts.pythonanywhere.com/codescout?code=escalier&interligne=3">code escalier</a>: équivalent au code alphabet avec un décalage de -10</li>
 </ul>
