@@ -22,6 +22,9 @@ Code Avocat: équivalent au code alphabet avec un décalage de +8 (A vaut K)
 
 Code Escalier: équivalent au code alphabet avec un décalage de -10 (S K liés)
 
+Codes basés sur une fonte: utilisation d'une fonte quelconque pour encoder le
+message (il existe beaucoup de fontes développées spécifiquement pour ça)
+
 La fonction principale de cette librairie se nomme codescout. Elle
 prend deux parametres obligatoires et plusieurs parametres optionnels:
 - message [requis]:       message a encoder
