@@ -177,7 +177,9 @@
         <button onclick="fetchImage()">Générer</button>
         <p id="status"></p>
         <img id="result" alt="Résultat de l'API">
-        <p> </p>
+        <p id="image-url" style="display: none;">
+            URL de l'image : <a id="image-link" href="#" target="_blank"></a>
+        </p>
         <button id="downloadBtn" style="display: none;">Télécharger l'image</button>
 
     </main>
@@ -197,6 +199,8 @@
             const decoder = document.getElementById('decoder').checked ? '1' : '0';  // Vérifie si la case est cochée
             const statusDiv = document.getElementById('status');
             const resultImg = document.getElementById('result');
+            const imageUrlContainer = document.getElementById('image-url');
+            const imageLink = document.getElementById('image-link');
 
             if (!query) {
                 statusDiv.textContent = "Veuillez entrer un message.";
@@ -205,6 +209,7 @@
 
             statusDiv.textContent = "Chargement...";
             resultImg.style.display = "none";
+            imageUrlContainer.style.display = "none";
 
             let url = `https://scouts.pythonanywhere.com/codescout?message=${encodeURIComponent(query)}&code=${code}&taille=${taille}&interligne=${interligne}&decoder=${decoder}`;
 
@@ -214,13 +219,18 @@
             }
 
             resultImg.src = url;
+            imageLink.href = url;
+            imageLink.textContent = url;
+
             resultImg.onload = () => {
                 statusDiv.textContent = "Résultat :";
                 resultImg.style.display = "block";
+                imageUrlContainer.style.display = "block";
             };
             resultImg.onerror = () => {
                 statusDiv.textContent = "Erreur lors du chargement de l'image.";
                 resultImg.style.display = "none";
+                imageUrlContainer.style.display = "none";
             };
         }
 
