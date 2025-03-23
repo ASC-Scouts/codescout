@@ -429,10 +429,9 @@ class CodeFonte(Encodeur):
         # On calcule la position de la note sur la portée
         x = 3 * self.taille_elements * (j + 0.5) + self.bordure
         y = (i * (1 + self.interligne)) * self.taille_elements * 3
-        if not (('A' <= lettre <= 'Z') or ('a' <= lettre <= 'z')):
+        lettre_a_encoder = unidecode(lettre)
+        if not (('A' <= lettre_a_encoder <= 'Z') or ('a' <= lettre_a_encoder <= 'z')):
             lettre_a_encoder = ' '
-        else:
-            lettre_a_encoder = lettre
         self.dessin.text((x, y), lettre_a_encoder, font=self.fonte_code, align='center')
         if self.decoder:
             y = (i * (1 + self.interligne) + 1.5) * self.taille_elements * 3
