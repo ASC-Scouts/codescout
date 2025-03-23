@@ -30,6 +30,19 @@
             box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
         }
 
+        header a {
+            color: white !important;
+            text-decoration: underline; /* Optionnel, pour garder l'effet de lien */
+        }
+
+        header a:visited {
+            color: white !important;
+        }
+
+        header a:hover {
+            color: #ddd; /* Optionnel, pour un léger effet au survol */
+        }
+
         /* Conteneur principal */
         main {
             background-color: white;
@@ -83,6 +96,15 @@
             min-width: 200px;
         }
 
+        .option.form-group {
+            display: flex;
+            align-items: left;
+            gap: 5px; /* Espacement entre le texte et la case */
+        }
+
+        .option.form-group label {
+            margin-bottom: 0; /* Supprime la marge par défaut du label */
+        }
         #status {
             margin-top: 20px;
             font-style: italic;
@@ -138,12 +160,9 @@
                 <input type="number" id="decalage" value="3" min="-25" max="25">
             </div>
 
-            <div class="option form-group">
-                <label for="decoder">Afficher le message décodé?</label>
-                <select id="decoder">
-                    <option value="1">Oui</option>
-                    <option value="0">Non</option>
-                </select>
+            <div class="option form-group" id="decoder-checkbox">
+                <label for="decoder">Afficher le message décodé ?</label>
+                <input type="checkbox" id="decoder" checked>
             </div>
 
         </div>
@@ -168,7 +187,7 @@
             const code = document.getElementById('code').value;
             const taille = document.getElementById('taille').value;
             const interligne = document.getElementById('interligne').value;
-            const decoder = document.getElementById('decoder').value;
+            const decoder = document.getElementById('decoder').checked ? '1' : '0';  // Vérifie si la case est cochée
             const statusDiv = document.getElementById('status');
             const resultImg = document.getElementById('result');
 
