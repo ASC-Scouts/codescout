@@ -133,6 +133,11 @@
                 <input type="number" id="interligne" value="1" min="0" max="10">
             </div>
 
+            <div class="option form-group" id="decalage-container" style="display: none;">
+                <label for="decalage">Décalage</label>
+                <input type="number" id="decalage" value="3" min="-25" max="25">
+            </div>
+
             <div class="option form-group">
                 <label for="decoder">Afficher le message décodé?</label>
                 <select id="decoder">
@@ -141,10 +146,6 @@
                 </select>
             </div>
 
-            <div class="option form-group" id="decalage-container" style="display: none;">
-                <label for="decalage">Décalage</label>
-                <input type="number" id="decalage" value="3" min="-26" max="26">
-            </div>
         </div>
 
         <button onclick="fetchImage()">Générer</button>
