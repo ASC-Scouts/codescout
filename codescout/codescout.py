@@ -42,6 +42,10 @@ prend deux parametres obligatoires et plusieurs parametres optionnels:
                           decode sous le code
 - fonte [default='FreeMono.ttf'] nom de la fonte a utiliser pour la legende
                           et le texte decode
+- decalage [default=0]:   decalage a utiliser avec le code alphabet
+- fontes [defaut={}]:     liste de fontes pouvant etre utilisees pour encoder
+                          des messages (cle: nom du code, valeur: chemin pour
+                          trouver la fonte sur le systeme de fichiers
 
 Cette fonction retourne une image, qui peut être affichée ou sauvegardée en
 utilisant les méthodes image.draw() et image.save().
