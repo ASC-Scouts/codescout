@@ -498,7 +498,7 @@ def codescout(message, code,
         fonte = ImageFont.load_default()
     if code.lower() in fontes:
         try:
-            fonte_code = ImageFont.truetype(fontes[code.lower()], taille*4)
+            fonte_code = ImageFont.truetype(fontes[code.lower()], taille*3)
         except IOError:
             fonte_code = fonte
 
