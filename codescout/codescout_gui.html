@@ -3,11 +3,15 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <!-- Google Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600&display=swap" rel="stylesheet">
+
     <title>Encodage de messages à l'aide de la librairie codescout</title>
     <style>
         /* Styles globaux */
         body {
-            font-family: 'Arial', sans-serif;
+            font-family: 'Poppins', sans-serif;
             background-color: #f4f4f4;
             color: #2e7d32; /* Vert foncé */
             margin: 0;
@@ -145,7 +149,7 @@
                     <option value="musical">Musical</option>
                     <option value="samourai">Samourai</option>
                     <option value="semaphore">Sémaphore</option>
-                    <option value="soleil">Soleil</option>
+                    <option value="soleil" selected>Soleil</option>
                     <option value="telephone">Téléphone</option>
                     <option value="tictactoe">Tic-Tac-Toe</option>
 
@@ -192,7 +196,7 @@
         }
 
         function fetchImage() {
-            const query = document.getElementById('query').value.trim();
+            query = document.getElementById('query').value.trim();
             const code = document.getElementById('code').value;
             const taille = document.getElementById('taille').value;
             const interligne = document.getElementById('interligne').value;
@@ -203,8 +207,7 @@
             const imageLink = document.getElementById('image-link');
 
             if (!query) {
-                statusDiv.textContent = "Veuillez entrer un message.";
-                return;
+                query = "ABCDEFGHIJKLM:NOPQRSTUVWXYZ";
             }
 
             statusDiv.textContent = "Chargement...";
