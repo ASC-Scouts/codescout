@@ -22,6 +22,9 @@ Code Avocat: équivalent au code alphabet avec un décalage de +8 (A vaut K)
 
 Code Escalier: équivalent au code alphabet avec un décalage de -10 (S K liés)
 
+Codes basés sur une fonte: utilisation d'une fonte quelconque pour encoder le
+message (il existe beaucoup de fontes développées spécifiquement pour ça)
+
 La fonction principale de cette librairie se nomme codescout. Elle
 prend deux parametres obligatoires et plusieurs parametres optionnels:
 - message [requis]:       message a encoder
@@ -42,6 +45,10 @@ prend deux parametres obligatoires et plusieurs parametres optionnels:
                           decode sous le code
 - fonte [default='FreeMono.ttf'] nom de la fonte a utiliser pour la legende
                           et le texte decode
+- decalage [default=0]:   decalage a utiliser avec le code alphabet
+- fontes [defaut={}]:     liste de fontes pouvant etre utilisees pour encoder
+                          des messages (cle: nom du code, valeur: chemin pour
+                          trouver la fonte sur le systeme de fichiers
 
 Cette fonction retourne une image, qui peut être affichée ou sauvegardée en
 utilisant les méthodes image.draw() et image.save().
@@ -425,10 +432,9 @@ class CodeFonte(Encodeur):
         # On calcule la position de la note sur la portée
         x = 3 * self.taille_elements * (j + 0.5) + self.bordure
         y = (i * (1 + self.interligne)) * self.taille_elements * 3
-        if not (('A' <= lettre <= 'Z') or ('a' <= lettre <= 'z')):
+        lettre_a_encoder = unidecode(lettre)
+        if not (('A' <= lettre_a_encoder <= 'Z') or ('a' <= lettre_a_encoder <= 'z')):
             lettre_a_encoder = ' '
-        else:
-            lettre_a_encoder = lettre
         self.dessin.text((x, y), lettre_a_encoder, font=self.fonte_code, align='center')
         if self.decoder:
             y = (i * (1 + self.interligne) + 1.5) * self.taille_elements * 3
@@ -495,7 +501,7 @@ def codescout(message, code,
         fonte = ImageFont.load_default()
     if code.lower() in fontes:
         try:
-            fonte_code = ImageFont.truetype(fontes[code.lower()], taille*4)
+            fonte_code = ImageFont.truetype(fontes[code.lower()], taille*3)
         except IOError:
             fonte_code = fonte
 

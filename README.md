@@ -16,6 +16,22 @@ monte d'une note jusqu'au M qui est un LA. Ensuite on reprend au dos central
 pour la lettre M mais avec des noires. On monte encore une fois jusqu'au LA
 aigu pour Z.
 
+Code alphabet: Dans ce code, chaque lettre du message est décalée d'un
+certain nombres de positions dans l'alphabet, en fonction d'un paramètre
+nommé "decalage". Par exemple, si decalage=2 alors un A devient un C, un
+B devient un D, un Y de vient un A et ainsi de suite.
+
+Code avocat (A vaut K): équivalent au code alphabet avec un décalage de 8:
+un A devient un K, un B devient un L et ainsi de suite.
+
+Code escalier (S-K liés): équivalent au code alphabet avec un décalage de
+-10: un S devient un K, un T devient un L et ainsi de suite.
+
+Code semaphore: le message est encodé selon le code maritime du
+sémaphore qui permet d'épeler un mot avec la position des bras.
+
+Code braille: le message est encodé en alphabet braille.
+
 La fonction principale de cette librairie se nomme codescout. Elle
 prend deux parametres obligatoires et plusieurs parametres optionnels:
 - message [requis]:       message a encoder
@@ -34,8 +50,12 @@ prend deux parametres obligatoires et plusieurs parametres optionnels:
                           (par exemple une courte instruction, un numero...)
 - decoder [defaut=False]  indique si oui ou nom on doit afficher le message
                           decode sous le code
-- fonte [default='FreeMono.ttf'] nom de la fonte a utiliser pour la legende
+- fonte [defaul='FreeMono.ttf'] nom de la fonte a utiliser pour la legende
                           et le texte decode
+- decalage [defaul=0]     decalage a utiliser pour le code alphabet
+- fontes [defaut={}]      dictionnaire definissant le nom des codes et la
+                          localisation des fontes sur disque pour les codes
+                          qui sont definis par une fonte
 
 Cette fonction retourne une image, qui peut être affichée ou sauvegardée en
 utilisant les méthodes image.draw() et image.save().
